@@ -1,138 +1,138 @@
 [
-{
-  "model": "ecomapp.products",
-  "pk": 3,
-  "fields": {
-    "user": 1,
-    "productname": "R2",
-    "image": "images.jpg",
-    "productbrand": "Yamaha R2",
-    "productcategory": "Bike",
-    "productinfo": "R2 is a stylish and sporty motorcycle designed for riders who want a combination of attractive looks, smooth performance, comfortable handling, and everyday practicality. Its modern design and reliable performance make it suitable for both city rides and longer journeys.",
-    "rating": "4.90",
-    "numReviews": 394,
-    "price": "249999.00",
-    "stockcount": 56,
-    "createdAt": "2026-09-20T18:21:36.815Z"
+  {
+    "model": "ecomapp.products",
+    "pk": 3,
+    "fields": {
+      "user": null,
+      "productname": "R2",
+      "image": "images.jpg",
+      "productbrand": "Yamaha R2",
+      "productcategory": "Bike",
+      "productinfo": "R2 is a stylish and sporty motorcycle designed for riders who want a combination of attractive looks, smooth performance, comfortable handling, and everyday practicality. Its modern design and reliable performance make it suitable for both city rides and longer journeys.",
+      "rating": "4.90",
+      "numReviews": 394,
+      "price": "249999.00",
+      "stockcount": 56,
+      "createdAt": "2026-09-20T18:21:36.815Z"
+    }
+  },
+  {
+    "model": "ecomapp.products",
+    "pk": 6,
+    "fields": {
+      "user": null,
+      "productname": "Z900",
+      "image": "z900.avif",
+      "productbrand": "Kawasaki Z900",
+      "productcategory": "Bike",
+      "productinfo": "Powerful naked motorcycle with aggressive styling, strong performance, responsive handling, and a comfortable ride. Perfect for city rides and long journeys.",
+      "rating": "4.70",
+      "numReviews": 3987,
+      "price": "999000.00",
+      "stockcount": 17,
+      "createdAt": "2026-09-28T12:43:24.588Z"
+    }
+  },
+  {
+    "model": "ecomapp.products",
+    "pk": 7,
+    "fields": {
+      "user": null,
+      "productname": "Hayabusa",
+      "image": "hayabusa.avif",
+      "productbrand": "Suzuki Hayabusa",
+      "productcategory": "Bike",
+      "productinfo": "Iconic sport motorcycle with powerful performance, aerodynamic styling, smooth handling, and a premium riding experience. Built for speed, comfort, and long-distance rides.",
+      "rating": "4.90",
+      "numReviews": 30,
+      "price": "1808768.00",
+      "stockcount": 4,
+      "createdAt": "2026-09-28T12:47:34.958Z"
+    }
+  },
+  {
+    "model": "ecomapp.products",
+    "pk": 8,
+    "fields": {
+      "user": null,
+      "productname": "Panigale V4",
+      "image": "ducati-panigale-v4-2025-.avif",
+      "productbrand": "Ducati Panigale V4",
+      "productcategory": "Bike",
+      "productinfo": "High-performance superbike with aggressive styling, powerful engine performance, advanced technology, and precise handling. Built for an exhilarating and sporty riding experience.",
+      "rating": "4.20",
+      "numReviews": 19,
+      "price": "3269958.00",
+      "stockcount": 2,
+      "createdAt": "2026-09-28T15:29:22.725Z"
+    }
+  },
+  {
+    "model": "ecomapp.products",
+    "pk": 9,
+    "fields": {
+      "user": null,
+      "productname": "Streetfighter V2",
+      "image": "ducati-streetfighter-v2-.avif",
+      "productbrand": "Ducati Streetfighter V2",
+      "productcategory": "Bike",
+      "productinfo": "Aggressive streetfighter with sporty styling, powerful performance, sharp handling, and advanced technology. Designed for an exciting and dynamic riding experience.",
+      "rating": "4.40",
+      "numReviews": 230,
+      "price": "1785977.00",
+      "stockcount": 25,
+      "createdAt": "2026-09-28T15:31:02.357Z"
+    }
+  },
+  {
+    "model": "ecomapp.products",
+    "pk": 10,
+    "fields": {
+      "user": null,
+      "productname": "RSV4 1100",
+      "image": "aprilia-.avif",
+      "productbrand": "Aprilia RSV4 1100 Factory",
+      "productcategory": "Bike",
+      "productinfo": "Premium superbike with a powerful V4 engine, aggressive styling, advanced electronics, and precise handling. Built for thrilling performance on the road and track.",
+      "rating": "4.50",
+      "numReviews": 523,
+      "price": "3340763.00",
+      "stockcount": 45,
+      "createdAt": "2026-09-28T15:32:56.858Z"
+    }
+  },
+  {
+    "model": "ecomapp.products",
+    "pk": 11,
+    "fields": {
+      "user": null,
+      "productname": "Streetfighter V4",
+      "image": "--standard1761911951384.avif",
+      "productbrand": "Ducati Streetfighter V4",
+      "productcategory": "Bike",
+      "productinfo": "Powerful naked superbike with aggressive styling, a high-performance V4 engine, advanced electronics, and sharp handling. Built for thrilling performance and an exciting riding experience.",
+      "rating": "4.60",
+      "numReviews": 243,
+      "price": "2925963.00",
+      "stockcount": 14,
+      "createdAt": "2026-09-28T15:36:29.813Z"
+    }
+  },
+  {
+    "model": "ecomapp.products",
+    "pk": 12,
+    "fields": {
+      "user": null,
+      "productname": "Ninja H2R",
+      "image": "kawasaki-select-model-mirror-coated-matte-spark-black-1676442407791_1.avif",
+      "productbrand": "Kawasaki Ninja H2R",
+      "productcategory": "Bike",
+      "productinfo": "Extreme track-focused superbike with supercharged performance, aggressive aerodynamic styling, advanced technology, and exceptional power. Built for ultimate speed and thrilling performance.",
+      "rating": "4.90",
+      "numReviews": 1532,
+      "price": "7990000.00",
+      "stockcount": 253,
+      "createdAt": "2026-09-28T15:39:42.113Z"
+    }
   }
-},
-{
-  "model": "ecomapp.products",
-  "pk": 6,
-  "fields": {
-    "user": 1,
-    "productname": "Z900",
-    "image": "z900.avif",
-    "productbrand": "Kawasaki Z900",
-    "productcategory": "Bike",
-    "productinfo": "Powerful naked motorcycle with aggressive styling, strong performance, responsive handling, and a comfortable ride. Perfect for city rides and long journeys.",
-    "rating": "4.70",
-    "numReviews": 3987,
-    "price": "999000.00",
-    "stockcount": 17,
-    "createdAt": "2026-09-28T12:43:24.588Z"
-  }
-},
-{
-  "model": "ecomapp.products",
-  "pk": 7,
-  "fields": {
-    "user": 1,
-    "productname": "Hayabusa",
-    "image": "hayabusa.avif",
-    "productbrand": "Suzuki Hayabusa",
-    "productcategory": "Bike",
-    "productinfo": "Iconic sport motorcycle with powerful performance, aerodynamic styling, smooth handling, and a premium riding experience. Built for speed, comfort, and long-distance rides.",
-    "rating": "4.90",
-    "numReviews": 30,
-    "price": "1808768.00",
-    "stockcount": 4,
-    "createdAt": "2026-09-28T12:47:34.958Z"
-  }
-},
-{
-  "model": "ecomapp.products",
-  "pk": 8,
-  "fields": {
-    "user": 1,
-    "productname": "Panigale V4",
-    "image": "ducati-panigale-v4-2025-.avif",
-    "productbrand": "Ducati Panigale V4",
-    "productcategory": "Bike",
-    "productinfo": "High-performance superbike with aggressive styling, powerful engine performance, advanced technology, and precise handling. Built for an exhilarating and sporty riding experience.",
-    "rating": "4.20",
-    "numReviews": 19,
-    "price": "3269958.00",
-    "stockcount": 2,
-    "createdAt": "2026-09-28T15:29:22.725Z"
-  }
-},
-{
-  "model": "ecomapp.products",
-  "pk": 9,
-  "fields": {
-    "user": 1,
-    "productname": "Streetfighter V2",
-    "image": "ducati-streetfighter-v2-.avif",
-    "productbrand": "Ducati Streetfighter V2",
-    "productcategory": "Bike",
-    "productinfo": "Aggressive streetfighter with sporty styling, powerful performance, sharp handling, and advanced technology. Designed for an exciting and dynamic riding experience.",
-    "rating": "4.40",
-    "numReviews": 230,
-    "price": "1785977.00",
-    "stockcount": 25,
-    "createdAt": "2026-09-28T15:31:02.357Z"
-  }
-},
-{
-  "model": "ecomapp.products",
-  "pk": 10,
-  "fields": {
-    "user": 1,
-    "productname": "RSV4 1100",
-    "image": "aprilia-.avif",
-    "productbrand": "Aprilia RSV4 1100 Factory",
-    "productcategory": "Bike",
-    "productinfo": "Premium superbike with a powerful V4 engine, aggressive styling, advanced electronics, and precise handling. Built for thrilling performance on the road and track.",
-    "rating": "4.50",
-    "numReviews": 523,
-    "price": "3340763.00",
-    "stockcount": 45,
-    "createdAt": "2026-09-28T15:32:56.858Z"
-  }
-},
-{
-  "model": "ecomapp.products",
-  "pk": 11,
-  "fields": {
-    "user": 1,
-    "productname": "Streetfighter V4",
-    "image": "--standard1761911951384.avif",
-    "productbrand": "Ducati Streetfighter V4",
-    "productcategory": "Bike",
-    "productinfo": "Powerful naked superbike with aggressive styling, a high-performance V4 engine, advanced electronics, and sharp handling. Built for thrilling performance and an exciting riding experience.",
-    "rating": "4.60",
-    "numReviews": 243,
-    "price": "2925963.00",
-    "stockcount": 14,
-    "createdAt": "2026-09-28T15:36:29.813Z"
-  }
-},
-{
-  "model": "ecomapp.products",
-  "pk": 12,
-  "fields": {
-    "user": 1,
-    "productname": "Ninja H2R",
-    "image": "kawasaki-select-model-mirror-coated-matte-spark-black-1676442407791_1.avif",
-    "productbrand": "Kawasaki Ninja H2R",
-    "productcategory": "Bike",
-    "productinfo": "Extreme track-focused superbike with supercharged performance, aggressive aerodynamic styling, advanced technology, and exceptional power. Built for ultimate speed and thrilling performance.",
-    "rating": "4.90",
-    "numReviews": 1532,
-    "price": "7990000.00",
-    "stockcount": 253,
-    "createdAt": "2026-09-28T15:39:42.113Z"
-  }
-}
 ]
