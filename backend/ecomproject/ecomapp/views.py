@@ -1,0 +1,283 @@
+from django.shortcuts import render
+import uuid
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from .models import Products, Order, OrderItem
+from .serializer import (
+    ProductsSerializer,
+    UserSerializer,
+    UserSerializerWithToken,
+    OrderSerializer
+)
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from rest_framework import status
+
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from .utils import TokenGenerator, generate_token
+from django.utils.encoding import force_bytes, force_str,DjangoUnicodeDecodeError
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.views.generic import View
+import threading 
+
+
+class EmailThread(threading.Thread):
+    def __init__(self, email_message):
+        self.email_message = email_message
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email_message.send()
+
+
+
+@api_view(["GET"])
+def getRoutes(request):
+    return Response("API is working")
+
+
+@api_view(["GET"])
+def getProducts(request):
+    products = Products.objects.all()
+    serializer = ProductsSerializer(products, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def getProduct(request, pk):
+    product = Products.objects.get(_id=pk)
+    serializer = ProductsSerializer(product, many=False)
+    return Response(serializer.data)
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        serializer = UserSerializerWithToken(self.user).data
+
+        for k, v in serializer.items():
+            data[k] = v
+
+        return data
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+    
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getUserProfile(request):
+    user = request.user
+    serializer = UserSerializer(user, many=False)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+@permission_classes([IsAdminUser])
+def getUsers(request):
+    user = User.objects.all()
+    serializer = UserSerializer(user, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+def registerUser(request):
+    data = request.data
+
+    print("REGISTER DATA:", data)
+
+    try:
+        user = User.objects.create_user(
+            first_name=data["fname"],
+            last_name=data["lname"],
+            username=data["email"],
+            email=data["email"],
+            password=data["password"],
+            is_active=False
+        )
+
+        print("USER CREATED:", user)
+
+        email_subject = "Activate Your Account"
+
+        message = render_to_string(
+            "activate.html",
+            {
+                "user": user,
+                "domain": "http://127.0.0.1:8000",
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": generate_token.make_token(user),
+            }
+        )
+
+        print("EMAIL SENDING TO:", data["email"])
+
+        email_message = EmailMessage(
+            email_subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [data["email"]],
+        )
+
+        EmailThread(email_message).start()
+        
+
+        message = {'details':'Activate Your Account Please click the link in gmail for account activation...'}
+
+        return Response(
+            message,
+            status=status.HTTP_201_CREATED
+        )
+
+    except Exception as e:
+        message = {'details':'User with this email already exists or something went wrong'}
+
+        return Response(
+            message,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+        
+class ActivateAccountView(View):
+
+    def get(self, request, uidb64, token):
+
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+
+            print("ACTIVATION UID:", uid)
+            print("ACTIVATION USER:", user)
+            print("USER ACTIVE BEFORE:", user.is_active)
+
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None:
+
+            if generate_token.check_token(user, token):
+
+                user.is_active = True
+                user.save()
+
+                print("ACCOUNT ACTIVATED")
+
+                return render(request, "activatesuccess.html")
+
+            print("TOKEN INVALID")
+
+        return render(request, "activatefail.html")
+    
+    
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getUserProfile(request):
+    user = request.user
+
+    serializer = UserSerializer(user, many=False)
+
+    return Response(serializer.data)
+
+@api_view(["GET", "POST"])
+@permission_classes([IsAuthenticated])
+def orders(request):
+
+    if request.method == "GET":
+        orders = Order.objects.filter(
+            user=request.user
+        ).order_by("-created_at")
+
+        serializer = OrderSerializer(
+            orders,
+            many=True
+        )
+
+        return Response(serializer.data)
+
+    if request.method == "POST":
+        data = request.data
+
+        order_items = data.get("items", [])
+
+        if not order_items:
+            return Response(
+                {"detail": "No items in order"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        total = 0
+
+        for item in order_items:
+            total += (
+                float(item["price"]) *
+                int(item["qty"])
+            )
+
+        order = Order.objects.create(
+            user=request.user,
+            order_id=f"ORD-{uuid.uuid4().hex[:8].upper()}",
+            total=total,
+            status="Order Placed"
+        )
+
+        for item in order_items:
+            try:
+                product = Products.objects.get(
+                    _id=item["product"]
+                )
+            except Products.DoesNotExist:
+                product = None
+
+            OrderItem.objects.create(
+                order=order,
+                product=product,
+                name=item["name"],
+                price=item["price"],
+                qty=item["qty"],
+                image=item.get("image", "")
+            )
+
+        serializer = OrderSerializer(order)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+        
+        
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def cancelOrder(request, pk):
+    try:
+        order = Order.objects.get(
+            order_id=pk,
+            user=request.user
+        )
+
+        if order.status == "Cancelled":
+            return Response(
+                {"detail": "Order is already cancelled."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        order.status = "Cancelled"
+        order.save()
+
+        serializer = OrderSerializer(order)
+
+        return Response(serializer.data)
+
+    except Order.DoesNotExist:
+        return Response(
+            {"detail": "Order not found."},
+            status=status.HTTP_404_NOT_FOUND
+        )
