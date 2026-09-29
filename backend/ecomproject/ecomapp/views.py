@@ -95,7 +95,18 @@ def registerUser(request):
 
         print("USER CREATED:", user)
 
-        # Send welcome email
+    except Exception as e:
+        print("REGISTER ERROR:", str(e))
+
+        return Response(
+            {
+                "details": "User with this email already exists or something went wrong"
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # Send welcome email separately
+    try:
         send_mail(
             subject="Welcome to Our E-Commerce Website",
             message=f"""
@@ -114,27 +125,17 @@ Thank you for joining us!
             fail_silently=False,
         )
 
-        message = {
-            "details": "Registration successful. Welcome email sent."
-        }
+        print("WELCOME EMAIL SENT:", data["email"])
 
-        return Response(
-            message,
-            status=status.HTTP_201_CREATED
-        )
+    except Exception as email_error:
+        print("WELCOME EMAIL ERROR:", str(email_error))
 
-    except Exception as e:
-        print("REGISTER ERROR:", str(e))
-
-        message = {
-            "details": "User with this email already exists or something went wrong"
-        }
-
-        return Response(
-            message,
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
+    return Response(
+        {
+            "details": "Registration successful."
+        },
+        status=status.HTTP_201_CREATED
+    )
 
 
         
