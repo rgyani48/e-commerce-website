@@ -18,7 +18,7 @@ import {
   userProfileReducers,
 } from "./reducers/userReducers.jsx";
 
-import { cartReducer } from "./reducers/cartreducers.jsx";
+import { cartReducer } from "./reducers/cartReducers.jsx";
 
 
 const reducer = combineReducers({
