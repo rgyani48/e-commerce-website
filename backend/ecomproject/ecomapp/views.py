@@ -335,6 +335,46 @@ def cancelOrder(request, pk):
         order.status = "Cancelled"
         order.save()
 
+        # Send cancellation email
+        try:
+            resend.api_key = os.environ.get("RESEND_API_KEY")
+
+            resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": [request.user.email],
+                "subject": f"Order Cancelled - {order.order_id}",
+                "html": f"""
+                    <h2>Order Cancelled</h2>
+
+                    <p>Hello {request.user.first_name},</p>
+
+                    <p>Your order has been successfully cancelled.</p>
+
+                    <p>
+                        <strong>Order ID:</strong> {order.order_id}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong> {order.status}
+                    </p>
+
+                    <p>
+                        <strong>Order Total:</strong> ₹{order.total}
+                    </p>
+
+                    <p>
+                        If you have any questions, please contact us.
+                    </p>
+
+                    <p>Thank you for shopping with us!</p>
+                """
+            })
+
+            print("CANCELLATION EMAIL SENT:", request.user.email)
+
+        except Exception as email_error:
+            print("CANCELLATION EMAIL ERROR:", str(email_error))
+
         serializer = OrderSerializer(order)
 
         return Response(serializer.data)
