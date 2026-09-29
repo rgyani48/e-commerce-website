@@ -4,10 +4,16 @@ import Rating from "./Rating.jsx";
 import { Link } from "react-router-dom";
 
 function Product({ product }) {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   return (
     <Card className="my-3 p-3 rounded">
       <Link to={`/product/${product._id}`}>
-        <Card.Img src={`http://127.0.0.1:8000${product.image}`} variant="top" />
+        <Card.Img
+          src={`${API_URL}${product.image}`}
+          variant="top"
+          alt={product.productname}
+        />
       </Link>
 
       <Card.Body>
@@ -21,7 +27,7 @@ function Product({ product }) {
         <Card.Text as="div">
           <div className="my-3">
             {product.rating} from {product.numReviews} reviews
-            </div>
+          </div>
         </Card.Text>
 
         <Card.Text as="h6">₹{product.price}</Card.Text>
@@ -29,7 +35,7 @@ function Product({ product }) {
         <Rating
           value={product.rating}
           text={`${product.numReviews} reviews`}
-          color={"#f8e825"}
+          color="#f8e825"
         />
       </Card.Body>
     </Card>

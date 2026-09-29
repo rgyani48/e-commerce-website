@@ -5,7 +5,9 @@ import {
 } from "../constants/cartConstants";
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
-  const { data } = await axios.get(`/api/product/${id}/`);
+  const { data } = await axios.get(
+  `${import.meta.env.VITE_API_URL}/api/product/${id}/`
+);
 
   console.log("URL PRODUCT ID:", id);
   console.log("PRODUCT API DATA:", data);

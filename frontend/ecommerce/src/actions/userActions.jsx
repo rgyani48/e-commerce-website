@@ -8,21 +8,26 @@ import {
   USER_SIGNUP_FAIL,
   USER_LOGOUT,
   USER_PROFILE_REQUEST,
-USER_PROFILE_SUCCESS,
-USER_PROFILE_FAIL,
+  USER_PROFILE_SUCCESS,
+  USER_PROFILE_FAIL,
 } from "../constants/userConstants";
 
 export const signup = (fname, lname, email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_SIGNUP_REQUEST });
-    const config = { headers: { "Content-Type": "application/json" } };
+
+    const config = {
+      headers: { "Content-Type": "application/json" },
+    };
+
     const { data } = await axios.post(
-      "/api/users/register/",
+      `${import.meta.env.VITE_API_URL}/api/users/register/`,
       { fname, lname, email, password },
       config,
     );
+
     dispatch({ type: USER_SIGNUP_SUCCESS, payload: data });
-   
+
     return { success: true, data };
   } catch (error) {
     dispatch({
@@ -32,6 +37,7 @@ export const signup = (fname, lname, email, password) => async (dispatch) => {
         error.response?.data?.detail ||
         error.message,
     });
+
     return { success: false };
   }
 };
@@ -78,7 +84,6 @@ export const logout = () => (dispatch) => {
   });
 };
 
-
 export const getUserProfile = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -95,10 +100,7 @@ export const getUserProfile = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(
-      "/api/users/profile/",
-      config
-    );
+    const { data } = await axios.get("/api/users/profile/", config);
 
     dispatch({
       type: USER_PROFILE_SUCCESS,
@@ -107,9 +109,7 @@ export const getUserProfile = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_PROFILE_FAIL,
-      payload:
-        error.response?.data?.detail ||
-        error.message,
+      payload: error.response?.data?.detail || error.message,
     });
   }
 };

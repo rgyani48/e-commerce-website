@@ -15,7 +15,11 @@ function HomeScreen() {
 
   const productsList = useSelector((state) => state.productsList);
 
-  const { error, loading, products = [] } = productsList;
+  const { error, loading } = productsList;
+
+const products = Array.isArray(productsList.products)
+  ? productsList.products
+  : [];
 
   useEffect(() => {
     dispatch(listProducts());

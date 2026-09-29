@@ -216,9 +216,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/images/"
-
 MEDIA_ROOT = BASE_DIR / "static/images"
-
 if not DEBUG:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
