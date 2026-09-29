@@ -22,6 +22,7 @@ from rest_framework import status
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.views.generic import View
+from django.core.mail import send_mail
 
 
 
@@ -76,7 +77,6 @@ def getUsers(request):
     serializer = UserSerializer(user, many=True)
     return Response(serializer.data)
 
-
 @api_view(["POST"])
 def registerUser(request):
     data = request.data
@@ -95,8 +95,27 @@ def registerUser(request):
 
         print("USER CREATED:", user)
 
+        # Send welcome email
+        send_mail(
+            subject="Welcome to Our E-Commerce Website",
+            message=f"""
+Hello {data["fname"]},
+
+Your account has been successfully created.
+
+Email: {data["email"]}
+
+You can now login and start shopping.
+
+Thank you for joining us!
+""",
+            from_email=None,
+            recipient_list=[data["email"]],
+            fail_silently=False,
+        )
+
         message = {
-            "details": "Registration successful. You can now login."
+            "details": "Registration successful. Welcome email sent."
         }
 
         return Response(
