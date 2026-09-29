@@ -246,7 +246,7 @@ def orders(request):
 
         items_html = ""
 
-        for item in order.order_items.all():
+        for item in order.items.all():
             items_html += f"""
                 <tr>
                     <td style="padding: 8px; border-bottom: 1px solid #ddd;">
