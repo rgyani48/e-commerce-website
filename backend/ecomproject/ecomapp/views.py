@@ -28,28 +28,25 @@ from django.conf import settings
 from django.views.generic import View
 
 
-class EmailThread(threading.Thread):
-    def __init__(self, subject, html_message, to_email):
-        self.subject = subject
-        self.html_message = html_message
-        self.to_email = to_email
-        threading.Thread.__init__(self)
+def send_activation_email(subject, html_message, to_email):
+    try:
+        resend.api_key = os.environ.get("RESEND_API_KEY")
 
-    def run(self):
-        try:
-            resend.api_key = os.environ.get("RESEND_API_KEY")
+        response = resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": [to_email],
+            "subject": subject,
+            "html": html_message,
+        })
 
-            resend.Emails.send({
-                "from": "onboarding@resend.dev",
-                "to": [self.to_email],
-                "subject": self.subject,
-                "html": self.html_message,
-            })
+        print("RESEND RESPONSE:", response)
+        print("EMAIL SENT SUCCESSFULLY:", to_email)
 
-            print("EMAIL SENT SUCCESSFULLY:", self.to_email)
+        return True
 
-        except Exception as e:
-            print("RESEND EMAIL ERROR:", str(e))
+    except Exception as e:
+        print("RESEND EMAIL ERROR:", str(e))
+        return False
 
 
 
@@ -137,11 +134,11 @@ def registerUser(request):
 
         print("EMAIL SENDING TO:", data["email"])
 
-        EmailThread(
+        send_activation_email(
             email_subject,
             message,
             data["email"]
-            ).start()
+            )
         
 
         message = {'details':'Activate Your Account Please click the link in gmail for account activation...'}
