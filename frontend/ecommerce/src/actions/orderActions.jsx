@@ -14,7 +14,7 @@ export const createOrder = (orderItems) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.post(
-      "/api/orders/",
+      `${import.meta.env.VITE_API_URL}/api/orders/`,
       {
         items: orderItems,
       },
@@ -54,7 +54,7 @@ export const listOrders = () => async (dispatch, getState) => {
     };
 
     const { data } = await axios.get(
-      "/api/orders/",
+      `${import.meta.env.VITE_API_URL}/api/orders/`,
       config
     );
 
@@ -91,7 +91,7 @@ export const cancelOrder = (orderId) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.put(
-      `/api/orders/${orderId}/cancel/`,
+      `${import.meta.env.VITE_API_URL}/api/orders/${orderId}/cancel/`,
       {},
       config
     );

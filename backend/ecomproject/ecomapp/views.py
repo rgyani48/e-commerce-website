@@ -1,5 +1,8 @@
 from django.shortcuts import render
 import uuid
+import threading 
+import resend
+import os
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from .models import Products, Order, OrderItem
@@ -23,16 +26,30 @@ from django.utils.encoding import force_bytes, force_str,DjangoUnicodeDecodeErro
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.views.generic import View
-import threading 
 
 
 class EmailThread(threading.Thread):
-    def __init__(self, email_message):
-        self.email_message = email_message
+    def __init__(self, subject, html_message, to_email):
+        self.subject = subject
+        self.html_message = html_message
+        self.to_email = to_email
         threading.Thread.__init__(self)
 
     def run(self):
-        self.email_message.send()
+        try:
+            resend.api_key = os.environ.get("RESEND_API_KEY")
+
+            resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": [self.to_email],
+                "subject": self.subject,
+                "html": self.html_message,
+            })
+
+            print("EMAIL SENT SUCCESSFULLY:", self.to_email)
+
+        except Exception as e:
+            print("RESEND EMAIL ERROR:", str(e))
 
 
 
@@ -112,7 +129,7 @@ def registerUser(request):
             "activate.html",
             {
                 "user": user,
-                "domain": "http://127.0.0.1:8000",
+                "domain": "https://ecommerce-django-api-8ao5.onrender.com",
                 "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                 "token": generate_token.make_token(user),
             }
@@ -120,14 +137,11 @@ def registerUser(request):
 
         print("EMAIL SENDING TO:", data["email"])
 
-        email_message = EmailMessage(
+        EmailThread(
             email_subject,
             message,
-            settings.DEFAULT_FROM_EMAIL,
-            [data["email"]],
-        )
-
-        EmailThread(email_message).start()
+            data["email"]
+            ).start()
         
 
         message = {'details':'Activate Your Account Please click the link in gmail for account activation...'}

@@ -55,7 +55,7 @@ export const login = (email, password) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      "/api/users/login/",
+      `${import.meta.env.VITE_API_URL}/api/users/login/`,
       {
         username: email,
         password: password,
@@ -100,7 +100,10 @@ export const getUserProfile = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get("/api/users/profile/", config);
+    const { data } = await axios.get(
+  `${import.meta.env.VITE_API_URL}/api/users/profile/`,
+  config
+);
 
     dispatch({
       type: USER_PROFILE_SUCCESS,
