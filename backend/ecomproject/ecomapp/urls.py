@@ -45,11 +45,6 @@ urlpatterns = [
     name="cancelOrder"
 ),
 
-    path(
-        "activate/<uidb64>/<token>/",
-        views.ActivateAccountView.as_view(),
-        name="activate"
-    ),
 ]
 
 if settings.DEBUG:

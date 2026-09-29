@@ -1,7 +1,6 @@
 from django.shortcuts import render
 import uuid
 import threading 
-import resend
 import os
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -19,34 +18,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from .utils import TokenGenerator, generate_token
-from django.utils.encoding import force_bytes, force_str,DjangoUnicodeDecodeError
+
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.views.generic import View
-
-
-def send_activation_email(subject, html_message, to_email):
-    try:
-        resend.api_key = os.environ.get("RESEND_API_KEY")
-
-        response = resend.Emails.send({
-            "from": "onboarding@resend.dev",
-            "to": [to_email],
-            "subject": subject,
-            "html": html_message,
-        })
-
-        print("RESEND RESPONSE:", response)
-        print("EMAIL SENT SUCCESSFULLY:", to_email)
-
-        return True
-
-    except Exception as e:
-        print("RESEND EMAIL ERROR:", str(e))
-        return False
 
 
 
@@ -115,33 +90,14 @@ def registerUser(request):
             username=data["email"],
             email=data["email"],
             password=data["password"],
-            is_active=False
+            is_active=True
         )
 
         print("USER CREATED:", user)
 
-        email_subject = "Activate Your Account"
-
-        message = render_to_string(
-            "activate.html",
-            {
-                "user": user,
-                "domain": "https://ecommerce-django-api-8ao5.onrender.com",
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                "token": generate_token.make_token(user),
-            }
-        )
-
-        print("EMAIL SENDING TO:", data["email"])
-
-        send_activation_email(
-            email_subject,
-            message,
-            data["email"]
-            )
-        
-
-        message = {'details':'Activate Your Account Please click the link in gmail for account activation...'}
+        message = {
+            "details": "Registration successful. You can now login."
+        }
 
         return Response(
             message,
@@ -149,12 +105,17 @@ def registerUser(request):
         )
 
     except Exception as e:
-        message = {'details':'User with this email already exists or something went wrong'}
+        print("REGISTER ERROR:", str(e))
+
+        message = {
+            "details": "User with this email already exists or something went wrong"
+        }
 
         return Response(
             message,
             status=status.HTTP_400_BAD_REQUEST
         )
+
 
 
         
