@@ -222,6 +222,7 @@ if not DEBUG:
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://e-commerce-website-dun-pi.vercel.app",
 ]
 
 
