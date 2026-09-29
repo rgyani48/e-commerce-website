@@ -240,11 +240,82 @@ def orders(request):
 
         serializer = OrderSerializer(order)
 
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED
-        )
-        
+# Send order confirmation email
+    try:
+        resend.api_key = os.environ.get("RESEND_API_KEY")
+
+        items_html = ""
+
+        for item in order.order_items.all():
+            items_html += f"""
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                        {item.name}
+                    </td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                        {item.qty}
+                    </td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                        ₹{item.price}
+                    </td>
+                </tr>
+            """
+
+        resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": [request.user.email],
+            "subject": f"Order Confirmation - {order.order_id}",
+            "html": f"""
+                <h2>Order Confirmed!</h2>
+
+                <p>Hello {request.user.first_name},</p>
+
+                <p>Thank you for your order.</p>
+
+                <p>
+                    <strong>Order ID:</strong> {order.order_id}
+                </p>
+
+                <p>
+                    <strong>Status:</strong> {order.status}
+                </p>
+
+                <table style="border-collapse: collapse; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 8px; text-align: left;">
+                                Product
+                            </th>
+                            <th style="padding: 8px; text-align: left;">
+                                Quantity
+                            </th>
+                            <th style="padding: 8px; text-align: left;">
+                                Price
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {items_html}
+                    </tbody>
+                </table>
+
+                <h3>Total: ₹{order.total}</h3>
+
+                <p>Thank you for shopping with us!</p>
+            """
+        })
+
+        print("ORDER EMAIL SENT:", request.user.email)
+
+    except Exception as email_error:
+        print("ORDER EMAIL ERROR:", str(email_error))
+
+    return Response(
+        serializer.data,
+        status=status.HTTP_201_CREATED
+    )
+            
         
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
