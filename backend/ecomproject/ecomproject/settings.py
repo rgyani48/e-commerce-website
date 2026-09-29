@@ -225,6 +225,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://e-commerce-website-dun-pi.vercel.app",
     "https://e-commerce-website-git-main-gyani-kumar.vercel.app",
     "https://e-commerce-website-p0mod59bb-gyani-kumar.vercel.app",
+    "https://e-commerce-website-ft4x4ceew-gyani-kumar.vercel.app",
 ]
 
 
