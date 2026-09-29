@@ -223,9 +223,10 @@ if not DEBUG:
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://e-commerce-website-dun-pi.vercel.app",
-    "https://e-commerce-website-git-main-gyani-kumar.vercel.app",
-    "https://e-commerce-website-p0mod59bb-gyani-kumar.vercel.app",
-    "https://e-commerce-website-ft4x4ceew-gyani-kumar.vercel.app",
+]
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://e-commerce-website-[a-z0-9-]+-gyani-kumar\.vercel\.app$",
 ]
 
 
