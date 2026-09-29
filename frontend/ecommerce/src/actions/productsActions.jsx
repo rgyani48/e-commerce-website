@@ -11,7 +11,9 @@ import {
 export const listProducts = () => async (dispatch) => {
   try {
     console.log("VITE API URL:", import.meta.env.VITE_API_URL);
+
     dispatch({ type: PRODUCT_LIST_REQUEST });
+
     const { data } = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/products/`,
     );
@@ -21,9 +23,13 @@ export const listProducts = () => async (dispatch) => {
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
-      payload: Array.isArray(data) ? data : data.results || data.products || [],
+      payload: Array.isArray(data)
+        ? data
+        : data.results || data.products || [],
     });
   } catch (error) {
+    console.error("PRODUCT API ERROR:", error);
+
     dispatch({
       type: PRODUCT_LIST_FAIL,
       payload:
@@ -37,6 +43,7 @@ export const listProducts = () => async (dispatch) => {
 export const listProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
+
     const { data } = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/product/${id}/`,
     );
