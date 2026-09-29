@@ -2,6 +2,7 @@ from django.shortcuts import render
 import uuid
 import threading 
 import os
+import resend
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from .models import Products, Order, OrderItem
@@ -81,8 +82,6 @@ def getUsers(request):
 def registerUser(request):
     data = request.data
 
-    print("REGISTER DATA:", data)
-
     try:
         user = User.objects.create_user(
             first_name=data["fname"],
@@ -93,7 +92,7 @@ def registerUser(request):
             is_active=True
         )
 
-        print("USER CREATED:", user)
+        print("USER CREATED:", user.email)
 
     except Exception as e:
         print("REGISTER ERROR:", str(e))
@@ -105,25 +104,26 @@ def registerUser(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # Send welcome email separately
+    # Send welcome email
     try:
-        send_mail(
-            subject="Welcome to Our E-Commerce Website",
-            message=f"""
-Hello {data["fname"]},
+        resend.api_key = os.environ.get("RESEND_API_KEY")
 
-Your account has been successfully created.
+        resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": [data["email"]],
+            "subject": "Welcome to Our E-Commerce Website",
+            "html": f"""
+                <h2>Welcome, {data["fname"]}!</h2>
 
-Email: {data["email"]}
+                <p>Your account has been successfully created.</p>
 
-You can now login and start shopping.
+                <p><strong>Email:</strong> {data["email"]}</p>
 
-Thank you for joining us!
-""",
-            from_email=None,
-            recipient_list=[data["email"]],
-            fail_silently=False,
-        )
+                <p>You can now login and start shopping.</p>
+
+                <p>Thank you for joining us!</p>
+            """
+        })
 
         print("WELCOME EMAIL SENT:", data["email"])
 
