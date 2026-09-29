@@ -48,7 +48,7 @@ function ProductScreen(params) {
           <Row>
             <Col md={6}>
               <Image
-                src={`${import.meta.env.VITE_API_URL}${product.image}`}
+                src={`${import.meta.env.VITE_API_URL}/static${product.image}`}
                 alt={product.name}
                 fluid
               />
