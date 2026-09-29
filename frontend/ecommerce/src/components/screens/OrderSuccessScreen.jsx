@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Container, Card, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,9 +18,14 @@ function OrderSuccessScreen() {
   const [orderId, setOrderId] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const orderPlacedRef = useRef(false);
 
   useEffect(() => {
-    const placeOrder = async () => {
+  if (orderPlacedRef.current) return;
+
+  orderPlacedRef.current = true;
+
+  const placeOrder = async () => {
       if (!userInfo) {
         navigate("/login");
         return;
